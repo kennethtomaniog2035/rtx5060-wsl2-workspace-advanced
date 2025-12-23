@@ -99,8 +99,7 @@ docker run --rm --gpus all nvcr.io/nvidia/cuda:12.8.0-base-ubuntu24.04 nvidia-sm
 
 ### Need Help Setting Up?
 
-Watch this comprehensive tutorial:  
-**[WSL2 + NVIDIA Driver + CUDA Setup](https://youtu.be/PevhQHn-6R8?si=50_s43qlGhjAzCqC)**
+Watch this comprehensive tutorial: **[WSL2 + NVIDIA Driver + CUDA Setup](https://youtu.be/PevhQHn-6R8?si=50_s43qlGhjAzCqC)**
 
 ---
 
