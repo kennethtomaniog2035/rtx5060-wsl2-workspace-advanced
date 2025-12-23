@@ -604,7 +604,7 @@ ports:
 - [Vite](https://vitejs.dev/)
 
 ### Related Projects
-- **Simple ML Workspace:** [python3-workspace](https://github.com/kennethtomaniog2035/rtx5060-wsl2-workspace) - Lightweight version without frontend tools and language model dependencies
+- **Simple ML Workspace:** [python3-workspace](https://github.com/kennethtomaniog2035/rtx5060-wsl2-workspace) - lightweight version without frontend tools and language model dependencies
 
 ---
 
