@@ -2,13 +2,26 @@
 
 A production-ready Docker environment for **end-to-end machine learning development** on **NVIDIA RTX 5000 series GPUs**. Build complete ML applications from training to deployment with GPU acceleration.
 
-**Python Version:** 3.12  
-**Base Image:** `nvcr.io/nvidia/tensorflow:25.02-tf2-py3`  
-**CUDA Version:** 12.8+
+**Python version:** 3.12.3
+**Base image:** `nvcr.io/nvidia/tensorflow:25.02-tf2-py3`
+**CUDA V=version:** 12.8+
 
 ---
 
-## What's Inside
+## Development System Specs
+
+This workspace was developed and tested on:
+
+- **OS:** Microsoft Windows 11 Home
+- **CPU:** Intel® Core™ i5-13450HX
+- **GPU:** NVIDIA® GeForce RTX 5060
+- **Storage:** 512 GB SSD
+- **Memory:** 16 GB RAM
+- **WSL:** Ubuntu 24.04
+
+---
+
+## What's Included
 
 This containerized workspace includes everything you need for full-stack ML development:
 
@@ -19,24 +32,7 @@ This containerized workspace includes everything you need for full-stack ML deve
 - **Node.js LTS + npm** for modern frontend development
 - **FastAPI + Uvicorn** for ML model serving
 - **Vite** for rapid frontend prototyping
-- Optimized VRAM management for 8GB GPUs
-
----
-
-## Development System
-
-Developed and tested on:
-
-| Component | Specification |
-|-----------|---------------|
-| **OS** | Windows 11 Home + WSL2 Ubuntu 24.04 |
-| **CPU** | Intel Core i5-13450HX |
-| **GPU** | NVIDIA GeForce RTX 5060 (Blackwell, sm_120) |
-| **VRAM** | 8 GB |
-| **RAM** | 16 GB |
-| **Storage** | 512 GB SSD |
-
-**Compatible with:** All NVIDIA RTX 5000 series GPUs (RTX 5060, 5070, 5080, 5090)
+- Optimized VRAM management for 8 GB GPUs
 
 ---
 
@@ -66,7 +62,7 @@ Build complete ML applications in one environment:
 - Vite for blazing-fast HMR
 - Full build toolchain for native modules
 
-### 8GB VRAM Optimization
+### 8 GB VRAM Optimization
 - Memory fragmentation reduction
 - Lazy CUDA module loading
 - Controlled batch sizes for llama.cpp
@@ -108,33 +104,27 @@ Watch this comprehensive tutorial:
 
 ---
 
-## Quick Start
+## Build and Run
 
-### 1. Clone Repository
+### 1. Build the container (make sure you're in subdirectory: dockerfiles)
 ```bash
-git clone https://github.com/yourusername/rtx-5000-blackwell-ml-workspace.git
-cd rtx-5000-blackwell-ml-workspace
-```
-
-### 2. Build Container
-```bash
-cd dockerfiles
 docker compose build
 ```
-**Build time:** 10-15 minutes (llama-cpp-python compiles from source)
+**Build time:** 30 minutes - 1 hour (llama-cpp-python compiles from source)
 
-### 3. Start Environment
+### 2. Start the service
 ```bash
 docker compose up -d
 ```
 
-### 4. Access Jupyter Lab
-Open in browser:
+### 3. Access Jupyter Lab
+Open your browser at:
 ```
-http://localhost:8888/lab?token=rtx-5060_dev
+http://127.0.0.1:8888/lab?token=
 ```
+**Token:** `rtx-5060_dev`
 
-### 5. Verify GPU Support
+### 4. Verify GPU Support
 
 Create a new notebook and run:
 ```python
@@ -161,8 +151,10 @@ TensorFlow GPUs: [PhysicalDevice(name='/physical_device:GPU:0', device_type='GPU
 llama-cpp GPU Support: True
 ```
 
-### 6. Stop Environment
-```bash
+### 5. Shutdown the container
+
+To stop and remove the container:
+```
 docker compose down
 ```
 
@@ -389,13 +381,13 @@ Edit `docker-compose.yml`:
 ```yaml
 command: >
   bash -c "python3 /usr/local/bin/verify_gpu.py && 
+  echo '' && 
   jupyter lab 
   --ip 0.0.0.0 
-  --port 8888
   --allow-root 
   --no-browser 
-  --ServerApp.token='your-custom-token'
-  --ServerApp.password=''
+  --log-level=INFO 
+  --ServerApp.token='rtx-5060_dev' 
   --ResourceUseDisplay.track_cpu_percent=True"
 ```
 
@@ -508,7 +500,7 @@ docker compose build --no-cache
 
 ## Performance Optimization
 
-### For 8GB VRAM Cards
+### For 8 GB VRAM Cards
 
 **1. Gradient Accumulation**
 ```python
@@ -567,9 +559,10 @@ torch.backends.cudnn.benchmark = True
 
 Already configured in `docker-compose.yml`:
 ```yaml
-CUDA_MODULE_LOADING=LAZY              # Defer kernel loading
-PYTORCH_ALLOC_CONF=expandable_segments:True  # Reduce fragmentation
-LLAMA_ARG_N_BATCH=512                 # Control llama.cpp batching
+CUDA_MODULE_LOADING=LAZY    # Optimized kernel loading for Blackwell ISA
+NVIDIA_DISABLE_REQUIRE=1    # Skips minor version checks for 12.8 -> 13.1 compatibility
+PYTORCH_ALLOC_CONF=expandable_segments:True    # Reduces VRAM fragmentation on 8 GB VRAM
+LLAMA_ARG_N_BATCH=512   # Prevents llama-cpp from trying to allocate massive batches on 8 GB VRAM
 ```
 
 ---
@@ -620,10 +613,9 @@ ports:
 
 Having issues?
 
-1. Check [Troubleshooting](#-troubleshooting) section
-2. Review logs: `docker compose logs -f`
-3. Verify prerequisites: `nvidia-smi`, `nvcc --version`
-4. Open GitHub issue with error logs and system info
+1. Review logs: `docker compose logs -f`
+2. Verify prerequisites: `nvidia-smi`, `nvcc --version`
+3. Open GitHub issue with error logs and system info
 
 ---
 
@@ -631,7 +623,7 @@ Having issues?
 
 | Component | Minimum | Recommended |
 |-----------|---------|-------------|
-| **GPU** | RTX 5060 (8GB) | RTX 5070+ (12GB+) |
+| **GPU** | RTX 5060 (8 GB) | RTX 5070+ (12 GB+) |
 | **RAM** | 16 GB | 32 GB |
 | **Storage** | 50 GB free | 100 GB+ SSD |
 | **Driver** | 570+ | Latest |
