@@ -2,7 +2,7 @@
 
 A production-ready Docker environment for **end-to-end machine learning development** on **NVIDIA RTX 5000 series GPUs**. Build complete ML applications from training to deployment with GPU acceleration.
 
-**Python version:** 3.12  
+**Python version:** 3.12.3  
 **Base image:** `nvcr.io/nvidia/tensorflow:25.02-tf2-py3`  
 **CUDA version:** 12.8+
 
