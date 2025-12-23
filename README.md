@@ -1,6 +1,6 @@
 # Python3 Full-Stack Machine Learning Workspace for NVIDIA RTX 5000 series GPUs
 
-A production-ready Docker environment for **end-to-end machine learning development** on **NVIDIA RTX 5000 series GPUs**. Build complete ML applications from training to deployment with GPU acceleration.
+This repository contains a production-ready Docker environment for **end-to-end machine learning development** on **NVIDIA RTX 5000 series GPUs** in Windows 11. Build complete ML applications from training to deployment with GPU acceleration.
 
 **Python version:** 3.12.3  
 **Base image:** `nvcr.io/nvidia/tensorflow:25.02-tf2-py3`  
