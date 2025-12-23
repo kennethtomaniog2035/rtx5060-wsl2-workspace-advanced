@@ -4,7 +4,7 @@ A production-ready Docker environment for **end-to-end machine learning developm
 
 **Python version:** 3.12.3
 **Base image:** `nvcr.io/nvidia/tensorflow:25.02-tf2-py3`
-**CUDA V=version:** 12.8+
+**CUDA V=version:** 12.8+ 
 
 ---
 
