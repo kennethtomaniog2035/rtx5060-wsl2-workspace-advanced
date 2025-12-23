@@ -1,0 +1,57 @@
+services:
+  tf-lab:
+    build:
+      context: ..
+      dockerfile: dockerfiles/Dockerfile
+    image: rtx-5060
+    container_name: rtx-5060_dev
+
+    # Refined GPU access for Blackwell
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu, compute, utility, video]
+
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,video
+      - CUDA_MODULE_LOADING=LAZY    # Optimized kernel loading for Blackwell ISA
+      - NVIDIA_DISABLE_REQUIRE=1    # Skips minor version checks for 12.8 -> 13.1 compatibility
+      - PYTORCH_ALLOC_CONF=expandable_segments:True    # Reduces VRAM fragmentation on 8 GB VRAM
+      - LLAMA_ARG_N_BATCH=512   # Prevents llama-cpp from trying to allocate massive batches on 8 GB VRAM
+
+    ipc: host
+    ulimits:
+      memlock: -1
+      stack: 67108864
+      
+    ports:
+      - "8888:8888" # Jupyter Lab
+      - "5173:5173" # For Vite frontend stuff
+      - "8000:8000" # For backend stuff
+
+    volumes:
+      - ..:/workspace
+      - jupyter-settings:/root/.jupyter
+
+    working_dir: /workspace
+    stdin_open: true
+    tty: true
+      
+    # Verify GPU, then launch Jupyter
+    command: >
+      bash -c "python3 /usr/local/bin/verify_gpu.py && 
+      echo '' && 
+      jupyter lab 
+      --ip 0.0.0.0 
+      --allow-root 
+      --no-browser 
+      --log-level=INFO 
+      --ServerApp.token='rtx-5060_dev' 
+      --ResourceUseDisplay.track_cpu_percent=True"
+
+volumes:
+  jupyter-settings:
